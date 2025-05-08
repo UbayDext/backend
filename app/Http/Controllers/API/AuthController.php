@@ -22,8 +22,8 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => null,
-                'message' => 'Invalid email or password'
-            ], 422);
+                'message' => 'Salah email or password'
+            ], 405);
         }
 
         $token = $user->createToken('API Token')->plainTextToken;
@@ -35,7 +35,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'user' => $user
             ],
-            'message' => 'Login successful'
+            'message' => 'Login Berhasil'
         ]);
     }
     public function logout(Request $request)
