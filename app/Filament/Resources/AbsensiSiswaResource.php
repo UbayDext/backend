@@ -68,6 +68,8 @@ class AbsensiSiswaResource extends Resource
                 Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('pelajaran_id')
                     ->numeric()
                     ->sortable(),

@@ -33,4 +33,7 @@ class AbsensiSiswa extends Model
     {
         return $this->belongsTo(Classroom::class);
     }
+    
+
 }
+
