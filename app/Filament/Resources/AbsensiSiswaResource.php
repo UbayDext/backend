@@ -23,21 +23,39 @@ class AbsensiSiswaResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name') // asumsinya relasi sudah ada
+                    ->searchable()
+                    ->required(),
+                Forms\Components\TextInput::make('name')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('pelajaran_id')
+                    ->maxLength(191),
+                Forms\Components\Select::make('pelajaran_id')
+                    ->relationship('pelajaran', 'nama') // Pastikan relasi `pelajaran()` ada di model
                     ->required()
-                    ->numeric(),
+                    ->searchable(),
                 Forms\Components\TextInput::make('classroom_id')
                     ->required()
                     ->numeric(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
-                Forms\Components\TextInput::make('check_in_time'),
-                Forms\Components\TextInput::make('check_out_time'),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\TimePicker::make('check_in_time')
+                    ->label('mulai jam pelajaran')
+                    ->required()
+                    ->seconds(),
+                Forms\Components\TimePicker::make('check_out_time')
+                    ->label('selesai jam pelajaran')
+                    ->required()
+                    ->seconds(),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'hadir' => 'Hadir',
+                        'izin' => 'Izin',
+                        'sakit' => 'Sakit',
+                        'alpha' => 'Alpha',
+                    ])
                     ->required(),
+
                 Forms\Components\Textarea::make('notes')
                     ->columnSpanFull(),
             ]);

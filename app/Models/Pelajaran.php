@@ -9,7 +9,7 @@ class Pelajaran extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code', 'start_time', 'end_time'];
+    protected $fillable = ['nama', 'code', 'start_time', 'end_time'];
 
     public function absensisiswas()
     {

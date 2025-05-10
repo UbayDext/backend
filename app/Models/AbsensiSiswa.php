@@ -11,6 +11,7 @@ class AbsensiSiswa extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'pelajaran_id',
         'classroom_id',
         'date',

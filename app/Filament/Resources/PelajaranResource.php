@@ -24,7 +24,7 @@ class PelajaranResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('nama')
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('code')
