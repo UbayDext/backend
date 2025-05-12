@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PelajaranResource\Pages;
-use App\Filament\Resources\PelajaranResource\RelationManagers;
-use App\Models\Pelajaran;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,34 +12,38 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\DateTimePicker;
+use Illuminate\Support\Facades\Hash;
 
-class PelajaranResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Pelajaran::class;
+    protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-book-open';
+    protected static ?string $navigationIcon = 'heroicon-s-user-group';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('code')
+                Forms\Components\TextInput::make('role')
+                    ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->email()
                     ->required()
                     ->maxLength(191),
-                Forms\Components\DateTimePicker::make('start_time')
-                    ->label('waktu mulai')
+                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                    ->dehydrated(fn($context): bool => $context === 'create')
                     ->required()
-                    ->displayFormat('Y-m-d H:i:s')
-                    ->seconds(),
-                Forms\Components\DateTimePicker::make('end_time')
-                    ->label('waktu selesai')
-                    ->required()
-                    ->displayFormat('Y-m-d H:i:s')
-                    ->seconds(),
+                    ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->preload()
+                    ->searchable()
             ]);
     }
 
@@ -49,14 +53,14 @@ class PelajaranResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('code')
+                Tables\Columns\TextColumn::make('role'),
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('start_time')
-                    ->label('waktu  mulai')
-                    ->dateTime('Y-m-d H:i:s'),
-                Tables\Columns\TextColumn::make('end_time')
-                    ->label('waktu selesai')
-                    ->dateTime('Y-m-d H:i:s'),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -89,9 +93,9 @@ class PelajaranResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPelajarans::route('/'),
-            'create' => Pages\CreatePelajaran::route('/create'),
-            'edit' => Pages\EditPelajaran::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

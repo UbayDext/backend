@@ -17,7 +17,7 @@ class AbsensiSiswaResource extends Resource
 {
     protected static ?string $model = AbsensiSiswa::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-identification';
 
     public static function form(Form $form): Form
     {

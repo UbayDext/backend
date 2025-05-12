@@ -21,7 +21,7 @@ class EditClassroom extends EditRecord
         try {
             parent::mount($record); 
         } catch (ModelNotFoundException $e) {
-            abort(404, 'Data absensi siswa tidak ditemukan.');
+            abort(404, 'Data kelas siswa tidak ditemukan.');
         }
     }
 }
