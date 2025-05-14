@@ -23,7 +23,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => null,
-                'message' => 'Salah email or password'
+                'message' => 'Salah email atau password'
             ], 405);
         }
 
