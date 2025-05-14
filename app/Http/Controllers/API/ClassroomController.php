@@ -5,84 +5,132 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 
 class ClassroomController extends Controller
 {
-    /**
-     * GET /api/classrooms
-     * Ambil semua data kelas
-     */
+    // GET /api/classrooms
     public function index()
     {
-        return Classroom::all();
+        try {
+            $data = Classroom::all();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data kelas berhasil diambil',
+                'data' => $data
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * POST /api/classrooms
-     * Tambah kelas baru
-     */
+    // POST /api/classrooms
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:191',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:191',
+            ]);
 
-        $classroom = Classroom::create($validated);
+            $classroom = Classroom::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kelas berhasil ditambahkan',
-            'data' => $classroom,
-        ], 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'Kelas berhasil ditambahkan',
+                'data' => $classroom,
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan kelas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * GET /api/classrooms/{id}
-     * Ambil detail kelas berdasarkan ID
-     */
+    // GET /api/classrooms/{id}
     public function show($id)
     {
-        $classroom = Classroom::findOrFail($id);
+        try {
+            $classroom = Classroom::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'data' => $classroom,
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $classroom,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kelas tidak ditemukan',
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * PUT /api/classrooms/{id}
-     * Update kelas
-     */
+    // PUT /api/classrooms/{id}
     public function update(Request $request, $id)
     {
-        $classroom = Classroom::findOrFail($id);
+        try {
+            $classroom = Classroom::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:191',
-        ]);
+            $validated = $request->validate([
+                'name' => 'required|string|max:191',
+            ]);
 
-        $classroom->update($validated);
+            $classroom->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kelas berhasil diperbarui',
-            'data' => $classroom,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Kelas berhasil diperbarui',
+                'data' => $classroom,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kelas tidak ditemukan',
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui kelas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * DELETE /api/classrooms/{id}
-     * Hapus kelas
-     */
+    // DELETE /api/classrooms/{id}
     public function destroy($id)
     {
-        $classroom = Classroom::findOrFail($id);
-        $classroom->delete();
+        try {
+            $classroom = Classroom::findOrFail($id);
+            $classroom->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kelas berhasil dihapus',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Kelas berhasil dihapus',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kelas tidak ditemukan',
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus kelas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
