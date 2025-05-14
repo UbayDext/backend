@@ -10,3 +10,9 @@ Route::post('/login', [Authcontroller::class, 'login']);
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+use App\Http\Controllers\Api\ClassroomController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('classrooms', ClassroomController::class);
+});
+

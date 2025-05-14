@@ -47,6 +47,12 @@ class Register extends Page implements HasForms
             'password' => Hash::make($data['password']),
         ]);
 
+        $user->assignRole('user');
+        if (!$user->hasRole('user')) {
+            logger('❌ Gagal assign role user ke ' . $user->email);
+        } else {
+            logger('✅ Berhasil assign role user ke ' . $user->email);
+        }
         Auth::login($user);
 
         return redirect()->route('filament.admin.pages.dashboard');
