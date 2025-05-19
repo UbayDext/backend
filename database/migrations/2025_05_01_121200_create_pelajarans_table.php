@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pelajarans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('classroom_id')->constrained()->onDelete('cascade');
             $table->string('nama');
             $table->string('code')->unique();
             $table->time('start_time');

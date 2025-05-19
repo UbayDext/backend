@@ -40,6 +40,11 @@ class PelajaranResource extends Resource
                     ->required()
                     ->displayFormat('Y-m-d H:i:s')
                     ->seconds(),
+                Forms\Components\Select::make('classroom_id')
+                    ->label('Kelas')
+                    ->relationship('classroom', 'name')
+                    ->required(),
+
             ]);
     }
 
@@ -47,7 +52,7 @@ class PelajaranResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('code')
                     ->searchable(),
@@ -65,6 +70,11 @@ class PelajaranResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('classroom.name')
+                    ->label('Kelas')
+                    ->sortable()
+                    ->searchable(),
+
             ])
             ->filters([
                 //
