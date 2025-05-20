@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Filters\SelectFilter;
 
 class PelajaranResource extends Resource
 {
@@ -76,9 +77,14 @@ class PelajaranResource extends Resource
                     ->searchable(),
 
             ])
-            ->filters([
-                //
+            ->filters(filters: [
+                SelectFilter::make('classroom_id')
+                    ->label('Kelas')
+                    ->relationship('classroom', 'name')
+                    ->searchable(),
+                    
             ])
+
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
