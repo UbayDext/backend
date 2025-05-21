@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('absensi_siswas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('name');
             $table->foreignId('pelajaran_id')->constrained('pelajarans')->cascadeOnDelete();
             $table->foreignId('classroom_id')->constrained('classrooms')->cascadeOnDelete();

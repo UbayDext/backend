@@ -26,8 +26,7 @@ class AbsensiSiswaResource extends Resource
             ->schema([
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name') // asumsinya relasi sudah ada
-                    ->searchable()
-                    ->required(),
+                    ->searchable(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(191),

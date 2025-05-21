@@ -47,7 +47,7 @@ class AbsensiSiswaController extends Controller
     {
         try {
             $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
+                'user_id' => 'nullable|exists:users,id',
                 'name' => 'required|string|max:191',
                 'pelajaran_id' => 'required|exists:pelajarans,id',
                 'classroom_id' => 'required|exists:classrooms,id',
@@ -82,7 +82,7 @@ class AbsensiSiswaController extends Controller
             $absensi = AbsensiSiswa::findOrFail($id);
 
             $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
+                'user_id' => 'nullable|exists:users,id',
                 'name' => 'required|string|max:191',
                 'pelajaran_id' => 'required|exists:pelajarans,id',
                 'classroom_id' => 'required|exists:classrooms,id',
