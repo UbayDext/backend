@@ -21,3 +21,9 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('pelajarans', PelajaranController::class);
 });
+use App\Http\Controllers\API\AbsensiSiswaController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('absensi', AbsensiSiswaController::class);
+});
+

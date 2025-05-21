@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
 
 class AbsensiSiswaResource extends Resource
 {
@@ -34,9 +35,12 @@ class AbsensiSiswaResource extends Resource
                     ->relationship('pelajaran', 'nama') // Pastikan relasi `pelajaran()` ada di model
                     ->required()
                     ->searchable(),
-                Forms\Components\TextInput::make('classroom_id')
+                Forms\Components\Select::make('classroom_id')
+                    ->label('Kelas')
+                    ->relationship('classroom', 'name')
                     ->required()
-                    ->numeric(),
+                    ->searchable(),
+
                 Forms\Components\DatePicker::make('date')
                     ->required(),
                 Forms\Components\TimePicker::make('check_in_time')
@@ -65,35 +69,28 @@ class AbsensiSiswaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                ->searchable(),
-                Tables\Columns\TextColumn::make('pelajaran_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('classroom_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('check_in_time'),
-                Tables\Columns\TextColumn::make('check_out_time'),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('user.name')->label('Nama Siswa'),
+                Tables\Columns\TextColumn::make('name')->label('Nama Absen'),
+                Tables\Columns\TextColumn::make('pelajaran.nama')->label('Pelajaran'),
+                Tables\Columns\TextColumn::make('classroom.name')->label('Kelas'),
+                Tables\Columns\TextColumn::make('date')->label('Tanggal')->date(),
+                Tables\Columns\TextColumn::make('check_in_time')->label('Masuk'),
+                Tables\Columns\TextColumn::make('check_out_time')->label('Keluar'),
+                Tables\Columns\TextColumn::make('status')->label('Status'),
             ])
+
             ->filters([
-                //
+                SelectFilter::make('classroom_id')
+                    ->label('Kelas')
+                    ->relationship('classroom', 'name')
+                    ->searchable(),
+
+                SelectFilter::make('pelajaran_id')
+                    ->label('Pelajaran')
+                    ->relationship('pelajaran', 'nama')
+                    ->searchable(),
             ])
+
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

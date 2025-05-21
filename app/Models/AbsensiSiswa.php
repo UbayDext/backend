@@ -27,13 +27,11 @@ class AbsensiSiswa extends Model
     }
     public function pelajaran()
     {
-        return $this->belongsTo(Pelajaran::class);
+        return $this->belongsTo(Pelajaran::class)->withDefault();
     }
+
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);
     }
-    
-
 }
-
