@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\AbsensiSiswa;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\Rule;
 use Exception;
 
 class AbsensiSiswaController extends Controller
 {
-    // GET /api/absensi
+    // GET /api/absensi-simple
     public function index(Request $request)
     {
         try {
@@ -43,26 +42,7 @@ class AbsensiSiswaController extends Controller
         }
     }
 
-    // GET /api/absensi/{id}
-    public function show($id)
-    {
-        try {
-            $data = AbsensiSiswa::with(['user', 'classroom', 'pelajaran'])->findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Data absensi ditemukan',
-                'data' => $data,
-            ]);
-        } catch (ModelNotFoundException) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Absensi tidak ditemukan',
-            ], 404);
-        }
-    }
-
-    // POST /api/absensi
+    // POST /api/absensi-simple
     public function store(Request $request)
     {
         try {
@@ -71,16 +51,7 @@ class AbsensiSiswaController extends Controller
                 'name' => 'required|string|max:191',
                 'pelajaran_id' => 'required|exists:pelajarans,id',
                 'classroom_id' => 'required|exists:classrooms,id',
-                'date' => [
-                    'required',
-                    'date',
-                    Rule::unique('absensi_siswas')->where(fn ($q) =>
-                        $q->where('user_id', $request->user_id)
-                          ->where('pelajaran_id', $request->pelajaran_id)
-                          ->where('classroom_id', $request->classroom_id)
-                          ->where('date', $request->date)
-                    ),
-                ],
+                'date' => 'required|date',
                 'check_in_time' => 'required|date_format:H:i:s',
                 'check_out_time' => 'required|date_format:H:i:s',
                 'status' => 'required|in:hadir,izin,sakit,alpha',
@@ -102,12 +73,13 @@ class AbsensiSiswaController extends Controller
             ], 500);
         }
     }
+    // Tambahkan ke dalam AbsensiSiswaSimpleController
 
-    // PUT /api/absensi/{id}
+    // PUT /api/absensi-simple/{id}
     public function update(Request $request, $id)
     {
         try {
-            $absen = AbsensiSiswa::findOrFail($id);
+            $absensi = AbsensiSiswa::findOrFail($id);
 
             $validated = $request->validate([
                 'user_id' => 'required|exists:users,id',
@@ -121,12 +93,12 @@ class AbsensiSiswaController extends Controller
                 'notes' => 'nullable|string',
             ]);
 
-            $absen->update($validated);
+            $absensi->update($validated);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Data absensi berhasil diperbarui',
-                'data' => $absen,
+                'data' => $absensi,
             ]);
         } catch (ModelNotFoundException) {
             return response()->json([
@@ -142,12 +114,12 @@ class AbsensiSiswaController extends Controller
         }
     }
 
-    // DELETE /api/absensi/{id}
+    // DELETE /api/absensi-simple/{id}
     public function destroy($id)
     {
         try {
-            $absen = AbsensiSiswa::findOrFail($id);
-            $absen->delete();
+            $absensi = AbsensiSiswa::findOrFail($id);
+            $absensi->delete();
 
             return response()->json([
                 'success' => true,
