@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PelajaranController;
 use App\Http\Controllers\Api\ClassroomController;
+use App\Http\Controllers\API\UserProfileController;
+use App\Http\Controllers\API\AbsensiSiswaController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
@@ -21,9 +23,15 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('pelajarans', PelajaranController::class);
 });
-use App\Http\Controllers\API\AbsensiSiswaController;
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('absensi', AbsensiSiswaController::class);
 });
 
+
+// Gunakan middleware auth:sanctum atau jwt jika perlu
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [UserProfileController::class, 'show']);
+    Route::put('/user/{id}', [UserProfileController::class, 'update']);
+});
